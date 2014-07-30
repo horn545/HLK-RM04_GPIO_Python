@@ -13,13 +13,13 @@ import xml.etree.ElementTree as xml
 
 class Config(object):
     def __init__(self,filename):
+        
         try:
-            tree = xml.ElementTree(file=filename)
-            self.root = tree.getroot()
-            self.password = self.root.attrib['password']
+            tree = xml.parse(filename)
+            root = tree.getroot()
+            
+            self.password = root.attrib['password']
+            self.modules = tree.iter('module')
+            
         except:
             raise
-
-
-
-
