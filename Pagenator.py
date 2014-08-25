@@ -65,7 +65,7 @@ def Pagenator(db):
                 for address in ips:
                     ip = address[0].strip()
                     #print "The module '"+alias+"' has an IP address of "+ip
-                pinarray = db.db.execute('select distinct pin from sensor_data where name=? and pindir=?',(name[0],'out'))
+                pinarray = db.db.execute('select distinct pin from sensor_data where name=?',(name[0],))
                 for pin in pinarray:
                     #print "The module has this pin..."+pin[0]
                     ajax+='''                    $("#'''+name[0]+pin[0]+'''").click(function(e) {
