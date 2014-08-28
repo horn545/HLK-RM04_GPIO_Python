@@ -1,8 +1,7 @@
 '''
 *-----------------------------------------------
-* Config Class
-* Creates a sqllite3 database with a table to store
-* GPIO pin data
+* Utility Functions
+* 
 *
 * Jason Harnish
 * 7/26/2014
@@ -59,16 +58,23 @@ def getname(ip,db):
         sensorname = sensor[0]
     return sensorname
 
-def gettime(config,sensorname):
+def getdirection(ip,pin,db):
+    sql = "SELECT DISTINCT pindir FROM sensor_data WHERE ip=? and pin=?"
+    pindirs = db.db.execute(sql,(ip,pin))
+    for pdir in pindirs:
+        pindir = pdir[0]
+    return pindir    
+    
+def gettime(config,sensorname,pin):
     sleeptime = 0
     #print "Getting sleep time for module "+sensorname
     for module in config.modules:
         if module.text.strip() == sensorname:
             for item in module:
-                if item.tag == 'timed':
-                    #print "Got this..."+item.text
-                    if item.text.strip() > '0':
-                        sleeptime = int(item.text.strip())
+                if item.tag == 'pinalias':
+                    for key in item.attrib.keys():
+                        if key == 'timed':
+                            sleeptime = item.attrib[key].strip()
     return sleeptime
 
 def setto1(ip,sensorport,pin,db,config):
@@ -82,7 +88,7 @@ def setto1(ip,sensorport,pin,db,config):
         recvsalt = getsalt(ip,int(sensorport))
         passhash = crypt.encrypt(config.password,salt=recvsalt[0:2])
         setpin(ip,sensorport,passhash,pin,"1")
-        time.sleep(0.5)
+        time.sleep(.5)
         state = getstate(ip,pin,db)
         #print state,type(state)
 
@@ -97,7 +103,7 @@ def setto0(ip,sensorport,pin,db,config):
         recvsalt = getsalt(ip,int(sensorport))
         passhash = crypt.encrypt(config.password,salt=recvsalt[0:2])
         setpin(ip,sensorport,passhash,pin,"0")
-        time.sleep(0.5)
+        time.sleep(.5)
         state = getstate(ip,pin,db)
         #print state,type(state)
     
@@ -114,16 +120,16 @@ def toggle(ip,pin,db):
     
     config = Config('gpio_wifi.cfg')
              
-    sleeptime = gettime(config,sensorname)
-    #print "Sleeptime is..."+str(sleeptime)
+    sleeptime = gettime(config,sensorname,pin)
+    #print "Sleeptime is..."+sleeptime
                   
     try:
         if laststate == 0:
             #print "Last State was 0"
             #print "Running "+sensorname+" for "+str(sleeptime)+" seconds..."
             setto1(ip,sensorport,pin,db,config)
-            if sleeptime > 0:
-                time.sleep(sleeptime)
+            if int(sleeptime) > 0:
+                time.sleep(int(sleeptime))
                 setto0(ip,sensorport,pin,db,config)
             return True            
 
@@ -131,8 +137,8 @@ def toggle(ip,pin,db):
             #print "Last State was 1"
             #print "Running "+sensorname+" for "+str(sleeptime)+" seconds..."
             setto0(ip,sensorport,pin,db,config)
-            if sleeptime > 0:
-                time.sleep(sleeptime)
+            if int(sleeptime) > 0:
+                time.sleep(int(sleeptime))
                 setto1(ip,sensorport,pin,db,config)
             return True
             
