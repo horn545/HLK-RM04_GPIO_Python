@@ -31,9 +31,9 @@ class GPIOTogglerWebService(object):
         state = Utils.getstate(ip, pin, self.db)
         return str(state)
         
-class server(Thread):
+class server(object):
     def __init__(self,htmldoc,db):
-        Thread.__init__(self)
+        #Thread.__init__(self)
         self.htmldoc = htmldoc
         self.db = db
         

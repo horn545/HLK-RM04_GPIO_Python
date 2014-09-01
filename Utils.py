@@ -8,7 +8,7 @@
 *-----------------------------------------------
 '''
 import socket
-from passlib.hash import des_crypt as crypt
+from des_crypt import des_crypt as crypt
 from Config import Config
 import time
 
@@ -38,32 +38,44 @@ def setpin(ip,port,password,pin,value):
     
 def getstate(ip,pin,db):
     sql = "SELECT DISTINCT pinval from sensor_data where ip=? and pin=? and timestamp >= datetime('now', '-5 seconds', 'localtime') group by pinval order by timestamp"
-    states = db.db.execute(sql,(ip,pin))
-    for state in states:
-        #print "States..."+str(state[0])
-        laststate = state[0]
-    return laststate
+    try:
+        states = db.db.execute(sql,(ip,pin))
+        for state in states:
+            #print "States..."+str(state[0])
+            laststate = state[0]
+        return laststate
+    except:
+        raise
 
 def getport(ip,db):
     sql = "SELECT DISTINCT port from sensor_data where ip=? and timestamp >= datetime('now', '-5 seconds', 'localtime')"
-    ports = db.db.execute(sql,(ip,))
-    for port in ports:
-        sensorport = port[0]
-    return sensorport
+    try:
+        ports = db.db.execute(sql,(ip,))
+        for port in ports:
+            sensorport = port[0]
+        return sensorport
+    except:
+        raise
 
 def getname(ip,db):
     sql = "SELECT DISTINCT name FROM sensor_data WHERE ip=?"
-    sensornames = db.db.execute(sql,(ip,))
-    for sensor in sensornames:
-        sensorname = sensor[0]
-    return sensorname
-
+    try:
+        sensornames = db.db.execute(sql,(ip,))
+        for sensor in sensornames:
+            sensorname = sensor[0]
+        return sensorname
+    except:
+        raise
+    
 def getdirection(ip,pin,db):
     sql = "SELECT DISTINCT pindir FROM sensor_data WHERE ip=? and pin=?"
-    pindirs = db.db.execute(sql,(ip,pin))
-    for pdir in pindirs:
-        pindir = pdir[0]
-    return pindir    
+    try:
+        pindirs = db.db.execute(sql,(ip,pin))
+        for pdir in pindirs:
+            pindir = pdir[0]
+        return pindir
+    except:
+        raise
     
 def gettime(config,sensorname,pin):
     sleeptime = 0

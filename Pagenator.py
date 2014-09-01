@@ -26,7 +26,7 @@ def Pagenator(db):
          <link href="css/bootstrap.min.css" rel="stylesheet">
          <link href="css/bootstrap-theme.min.css" rel="stylesheet">
          <link href="css/style.css" rel="stylesheet">
-         <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+         <script src="js/jquery-2.0.3.min.js"></script>
          <script src="js/bootstrap.min.js"></script>
          '''
     ajax = '''            <script type="text/javascript">
@@ -58,11 +58,19 @@ def Pagenator(db):
                         body+='''<div class="page-header">
                         <h1>'''+alias+'''</h1>
                         </div>\n'''
-                ips = db.db.execute('select distinct ip from sensor_data where name=?',(name[0],))
+                try:
+                    ips = db.db.execute('select distinct ip from sensor_data where name=?',(name[0],))
+                except:
+                    raise
+                
                 for address in ips:
                     ip = address[0].strip()
                     #print "The module '"+alias+"' has an IP address of "+ip
-                pinarray = db.db.execute('select distinct pin from sensor_data where name=?',(name[0],))
+                    
+                try:
+                    pinarray = db.db.execute('select distinct pin from sensor_data where name=?',(name[0],))
+                except:
+                    raise
                 
                 for pin in pinarray:
                     

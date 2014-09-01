@@ -21,10 +21,14 @@ class Database(object):
         self.db.commit()
         
     def insert(self, name, ip, port, pins, pinvals, datetime):
-        try:
-            for pin in pins:
-                pinindex = pins.index(pin)
-                self.db.execute("INSERT INTO sensor_data VALUES(?,?,?,?,?,?,?)", (name, ip, port, pin, pinvals[pinindex][0], pinvals[pinindex][1], datetime))
-                self.db.commit()
-        except:
-            raise
+        if self != '' and name !='' and ip != '' and port != '' and pins != '' and pinvals !='' and datetime != '':
+            try:
+                for pin in pins:
+                    pinindex = pins.index(pin)
+                    self.db.execute("INSERT INTO sensor_data VALUES(?,?,?,?,?,?,?)", (name, ip, port, pin, pinvals[pinindex][0], pinvals[pinindex][1], datetime))
+                    self.db.commit()
+                    return True
+            except:
+                raise
+                
+                
