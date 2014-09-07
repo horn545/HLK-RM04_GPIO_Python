@@ -5,7 +5,6 @@ Created on Jul 23, 2014
 '''
 
 import cherrypy
-from threading import Thread
 import os.path
 import Utils
 

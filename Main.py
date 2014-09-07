@@ -7,7 +7,6 @@ from Listener import Listener
 from Database import Database
 from Pagenator import Pagenator
 from Server import server
-import os.path
 import time
 
 
@@ -17,8 +16,8 @@ if __name__ == '__main__':
     listener = Listener(6969,256,db)
     listener.start()
     
-    print "Waiting 10 seconds for sensor data to populate the database..."
-    time.sleep(10)
+    print "Waiting 15 seconds for sensor data to populate the database...\n"
+    time.sleep(15)
     
     serverdoc = Pagenator(db)
     #print serverdoc
@@ -26,7 +25,5 @@ if __name__ == '__main__':
     webpage = server(serverdoc,db)
     webpage.run()
     
-    #while True:
-    #    pwd = os.path.abspath(os.getcwd())
-    
+    db.closedb()
     print "Stopped at "+time.strftime('%d-%m-%Y %H:%M:%S')

@@ -13,7 +13,8 @@ import Utils
 
 def Pagenator(db):
     print "Building Web Page..."
-    names = db.db.execute('select distinct name from sensor_data')
+    sql = "SELECT DISTINCT name FROM sensor_data"
+    names = db.query(sql)
 
     header = '''<!DOCTYPE html>
     <html>
@@ -59,7 +60,8 @@ def Pagenator(db):
                         <h1>'''+alias+'''</h1>
                         </div>\n'''
                 try:
-                    ips = db.db.execute('select distinct ip from sensor_data where name=?',(name[0],))
+                    sql = "SELECT DISTINCT ip FROM sensor_data WHERE name='"+name[0]+"'"
+                    ips = db.query(sql)
                 except:
                     raise
                 
@@ -68,7 +70,8 @@ def Pagenator(db):
                     #print "The module '"+alias+"' has an IP address of "+ip
                     
                 try:
-                    pinarray = db.db.execute('select distinct pin from sensor_data where name=?',(name[0],))
+                    sql = "SELECT DISTINCT pin FROM sensor_data where name='"+name[0]+"'"
+                    pinarray = db.query(sql)
                 except:
                     raise
                 

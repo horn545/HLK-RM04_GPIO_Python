@@ -15,7 +15,7 @@ from threading import Thread
 class Listener(Thread):
     def __init__(self, port, bufferSize, db):
         Thread.__init__(self)
-        print "Initializing Listener on port "+str(port)+" with buffer size "+str(bufferSize)+"..."
+        print "Initializing Listener on port "+str(port)+" with buffer size "+str(bufferSize)+"...\n"
         self.port = port
         self.bufferSize = bufferSize
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,7 +24,7 @@ class Listener(Thread):
         self.db = db
         
     def run(self):
-        print 'Starting Listener...'
+        print 'Starting Listener...\n'
         while True:
             self.msg = ''
             while self.msg == '':

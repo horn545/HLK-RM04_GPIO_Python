@@ -37,9 +37,9 @@ def setpin(ip,port,password,pin,value):
         return False
     
 def getstate(ip,pin,db):
-    sql = "SELECT DISTINCT pinval from sensor_data where ip=? and pin=? and timestamp >= datetime('now', '-5 seconds', 'localtime') group by pinval order by timestamp"
+    sql = "SELECT DISTINCT pinval from sensor_data where ip='"+ip+"' and pin='"+pin+"' and timestamp >= datetime('now', '-5 seconds', 'localtime') group by pinval order by timestamp"
     try:
-        states = db.db.execute(sql,(ip,pin))
+        states = db.query(sql)
         for state in states:
             #print "States..."+str(state[0])
             laststate = state[0]
@@ -48,9 +48,9 @@ def getstate(ip,pin,db):
         raise
 
 def getport(ip,db):
-    sql = "SELECT DISTINCT port from sensor_data where ip=? and timestamp >= datetime('now', '-5 seconds', 'localtime')"
+    sql = "SELECT DISTINCT port from sensor_data where ip='"+ip+"' and timestamp >= datetime('now', '-5 seconds', 'localtime')"
     try:
-        ports = db.db.execute(sql,(ip,))
+        ports = db.query(sql)
         for port in ports:
             sensorport = port[0]
         return sensorport
@@ -58,9 +58,9 @@ def getport(ip,db):
         raise
 
 def getname(ip,db):
-    sql = "SELECT DISTINCT name FROM sensor_data WHERE ip=?"
+    sql = "SELECT DISTINCT name FROM sensor_data WHERE ip='"+ip+"'"
     try:
-        sensornames = db.db.execute(sql,(ip,))
+        sensornames = db.query(sql)
         for sensor in sensornames:
             sensorname = sensor[0]
         return sensorname
@@ -68,9 +68,9 @@ def getname(ip,db):
         raise
     
 def getdirection(ip,pin,db):
-    sql = "SELECT DISTINCT pindir FROM sensor_data WHERE ip=? and pin=?"
+    sql = "SELECT DISTINCT pindir FROM sensor_data WHERE ip='"+ip+"' and pin='"+pin+"'"
     try:
-        pindirs = db.db.execute(sql,(ip,pin))
+        pindirs = db.query(sql)
         for pdir in pindirs:
             pindir = pdir[0]
         return pindir
