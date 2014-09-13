@@ -10,11 +10,16 @@
 '''
 from Config import Config
 import Utils
+import logging
+import os.path
 
 def Pagenator(db):
-    print "Building Web Page..."
+    logging.info("Building Web Page...")
     sql = "SELECT DISTINCT name FROM sensor_data"
     names = db.query(sql)
+    
+    currdir = os.path.abspath(os.getcwd()+'/../')
+    #print "Pagenator Dir... "+currdir
 
     header = '''<!DOCTYPE html>
     <html>
@@ -47,7 +52,8 @@ def Pagenator(db):
 </html>'''
                      
     for name in names:
-        config = Config('gpio_wifi.cfg')
+        config = Config(os.path.normpath(currdir+'/conf/gpio_wifi.cfg'))
+        #print os.path.normpath(currdir+'/conf/gpio_wifi.cfg')
         for module in config.modules:
             if module.text.strip() == name[0]:
                 #print 'Have data for '+name[0]
@@ -102,7 +108,7 @@ def Pagenator(db):
                                         pinalias = item.attrib[pinitem]
                                         if pinalias != 'NC':
                                             if pindir == 'out':
-                                                config = Config('gpio_wifi.cfg')
+                                                config = Config(os.path.normpath(currdir+'/conf/gpio_wifi.cfg'))
                                                 sleeptime = Utils.gettime(config, name[0],pin[0])
                                                 #print "Got pin sleeptime..."+str(sleeptime)
                                                 #print pinalias,pindir,sleeptime,type(sleeptime)
@@ -136,7 +142,7 @@ function(data) {if (data == 0) {$("#'''+name[0]+pin[0]+'''").removeClass('btn-de
                                                 body+='<p><button id="'+name[0]+pin[0]+'" type="button" class="btn btn-default" disabled>'+pinalias+'</button></p>\n'
                                             
                                             else:
-                                                print ''''A button was found who does is not broadcasting a direction.\n
+                                                print ''''A button was found who is not broadcasting a direction.\n
                                                  Check the configuration file on the modules, restart the 
                                                  errant module and restart this software.'''
                                                 

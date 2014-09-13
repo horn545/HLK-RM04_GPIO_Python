@@ -9,12 +9,13 @@
 *-----------------------------------------------
 '''
 import sqlite3
+import logging
 
 class Database(object):
     def __init__(self):
         self.db_name = "gpio.db"
         self.table_name = "sensor_data"
-        print "Initializing Database "+self.db_name+" with data table "+self.table_name+"...\n"
+        logging.info("Initializing Database "+self.db_name+" with data table "+self.table_name+"...")
         conn = sqlite3.connect(self.db_name)
         with conn:
             conn.execute("DROP TABLE IF EXISTS "+self.table_name)
@@ -50,12 +51,17 @@ class Database(object):
                 raise
     
     def closedb(self):
-        print "Closing Database..."
+        logging.info("Closing Database...")
         conn = sqlite3.connect(self.db_name)
-        with conn:
-            conn.commit()
-            conn.close()
+        conn.commit()
+        conn.close()
         return True
+    
+    def __del__(self):
+        self.closedb()
+    
+    def __exit__(self):
+        self.closedb()
         
                 
                 

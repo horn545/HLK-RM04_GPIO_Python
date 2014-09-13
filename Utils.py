@@ -11,6 +11,7 @@ import socket
 from des_crypt import des_crypt as crypt
 from Config import Config
 import time
+import os.path
 
 
 def getsalt(ip,port):
@@ -130,7 +131,8 @@ def toggle(ip,pin,db):
     laststate = getstate(ip,pin,db)
     #print "Last State was... "+str(laststate)
     
-    config = Config('gpio_wifi.cfg')
+    currdir = os.path.abspath(os.getcwd()+'/../')
+    config = Config(os.path.normpath(currdir+'/conf/gpio_wifi.cfg'))
              
     sleeptime = gettime(config,sensorname,pin)
     #print "Sleeptime is..."+sleeptime
